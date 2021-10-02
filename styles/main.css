@@ -3,3 +3,65 @@
     padding: 0;
     margin: 0;
 }
+
+body {
+    width: 100%;
+    height: 100vh;
+    background-image: url("../images/background.jpeg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 20px;
+    width: 480px;
+    background-image: linear-gradient(to bottom right, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    margin: 0 auto;
+    opacity: .8;
+    border-radius: 20px;
+}
+
+.container h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 900;
+}
+
+input[type=text], input[type=password] {
+    display: block;
+    width: 280px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+input[type=text]::placeholder, input[type=password]::placeholder {
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#login {
+    margin-top: 20px;
+    height: 40px;
+    width: 280px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#login:hover {
+    background-image: linear-gradient(to top left, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+}
