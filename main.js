@@ -15,6 +15,7 @@ function createWindow() {
     height: 480,
     resizable: false,
     //frame: false,
+    icon: path.join(__dirname, path.sep, "images", "instagram.png"),
     webPreferences: {
       preload: path.join(__dirname, path.sep, "scripts", "preload.js"),
     },
