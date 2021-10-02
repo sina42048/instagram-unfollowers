@@ -8,6 +8,9 @@ function createWindow() {
   win = new BrowserWindow({
     width: 640,
     height: 480,
+    webPreferences: {
+      preload: path.join(__dirname, path.sep, "scripts", "preload.js")
+    }
   });
   win.loadURL(
     url.format({
