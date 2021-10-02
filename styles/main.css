@@ -1,7 +1,13 @@
+@font-face {
+    font-family: Lobster;
+    src: url("../fonts/Lobster-Regular.ttf");
+}
+
 * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    font-family: Lobster, 'Lobster', sans-serif;
 }
 
 body {
@@ -16,23 +22,33 @@ body {
     justify-content: center;
 }
 
-.container {
+.overlay {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.login__container {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     padding: 20px;
-    width: 480px;
+    width: 350px;
     background-image: linear-gradient(to bottom right, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
     margin: 0 auto;
     opacity: .8;
     border-radius: 20px;
+    box-shadow: 5px 5px 40px;
 }
 
-.container h1 {
-    color: white;
+.login__container h1 {
+    color: black;
     font-size: 2.5rem;
-    font-weight: 900;
+    font-weight: 600;
 }
 
 input[type=text], input[type=password] {
@@ -44,11 +60,14 @@ input[type=text], input[type=password] {
     padding: 10px;
     margin-top: 20px;
     text-align: center;
+    font-size: 1.2rem;
+    box-shadow: 1px 1px 5px;
 }
 
 input[type=text]::placeholder, input[type=password]::placeholder {
     text-transform: uppercase;
     text-align: center;
+    font-size: .8rem;
 }
 
 #login {
@@ -58,10 +77,23 @@ input[type=text]::placeholder, input[type=password]::placeholder {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
+    box-shadow: 1px 1px 5px;
+    background-image: linear-gradient(to top left, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    background-size: 1px 100px;
+    transition: all 0.5s ease-in-out;
 }
 
 #login:hover {
-    background-image: linear-gradient(to top left, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    background-position: center center;
+}
+
+#login:disabled {
+    background-image: none;
+    background-color: transparent;
+    box-shadow: none;
+    cursor: progress;
+    color: white;
+    font-size: 1.5rem;
 }
