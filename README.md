@@ -2,4 +2,4 @@
 
 under construction
 
-![Alt Text](./images/demo.png)
+![Alt Text](./images/demo.PNG)
