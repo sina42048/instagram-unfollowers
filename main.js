@@ -18,6 +18,7 @@ function createWindow() {
     icon: path.join(__dirname, path.sep, "images", "instagram.png"),
     webPreferences: {
       preload: path.join(__dirname, path.sep, "scripts", "preload.js"),
+      webSecurity: false,
     },
   });
 
@@ -38,7 +39,6 @@ app.whenReady().then(() => {
   createWindow();
 
   ipcMain.on("login_request", async (event, args) => {
-
     const userData = {
       username: args.username,
       password: args.password,
@@ -50,6 +50,20 @@ app.whenReady().then(() => {
       },
       (err) => {
         event.sender.send("login_response", { success: false, err });
+      }
+    );
+  });
+
+  ipcMain.on("unfollowers_list_request", async (event, args) => {
+    instagram.unfollowersListRequest(
+      (unfollowers) => {
+        event.sender.send("unfollowers_list_response", {
+          success: true,
+          unfollowers,
+        });
+      },
+      (err) => {
+        event.sender.send("unfollowers_list_response", { success: false, err });
       }
     );
   });
@@ -80,7 +94,48 @@ const instagram = (function () {
     }
   }
 
+  async function unfollowersListRequest(onSuccess, onFailure) {
+    const followersFeed = ig.feed.accountFollowers(ig.state.cookieUserId);
+    const followingsFeed = ig.feed.accountFollowing(ig.state.cookieUserId);
+
+    try {
+      const followers = await getAllItemsFromFeed(followersFeed);
+      const followings = await getAllItemsFromFeed(followingsFeed);
+
+      const followersUserName = new Set(
+        followers.map(({ username }) => username)
+      );
+      const rawUnFollowers = followings.filter(
+        (following) => !followersUserName.has(following.username)
+      );
+      
+      const unFollowers = rawUnFollowers.map((unfollower) => {
+        return {
+          id: unfollower.pk,
+          image: unfollower.profile_pic_url,
+          name: unfollower.username,
+        };
+      });
+
+      console.log(unFollowers);
+      onSuccess(unFollowers);
+    } catch (err) {
+      console.log(err);
+      onFailure(err);
+    }
+  }
+
+  async function getAllItemsFromFeed(feed) {
+    let items = [];
+
+    do {
+      items = items.concat(await feed.items());
+    } while (feed.isMoreAvailable());
+    return items;
+  }
+
   return {
     loginRequest,
+    unfollowersListRequest,
   };
 })();
