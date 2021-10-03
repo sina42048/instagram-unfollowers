@@ -11,12 +11,29 @@
 
 <body>
     <div class="overlay"></div>
-    <div class="login__container">
-        <h1>Login To Instagram</h1>
-        <input type="text" name="username" id="username" placeholder="username">
-        <input type="password" name="username" id="password" placeholder="password">
-        <button type="button" id="login">Login Now !</button>
-    </div>
+    <div id="loader" class="display__none"></div>
+
+    <section id="login__section">
+        <div class="login__container">
+            <h1>Login To Instagram</h1>
+            <input type="text" name="username" id="username" placeholder="username">
+            <input type="password" name="username" id="password" placeholder="password">
+            <button type="button" id="login">Login Now !</button>
+        </div>
+    </section>
+    <div id="unfollowers__empty" class="unfollowers__empty display__none">Hooray... no one unfollowed you !</div>
+    <section id="unfollowers__section" class="display__none">
+        <div class="unfollowers__container">
+            <!-- <div class="unfollower__cart">
+                <img src="./images/instagram.png" alt="">
+                <div class="unfollower__cart__info">
+                    <p>Name</p>
+                    <button>Unfollow</button>
+                </div>
+            </div> -->
+        </div>
+    </section>
+
 
     <!-- SCRIPTS -->
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
