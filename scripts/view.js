@@ -1,4 +1,9 @@
+const loader = $("#loader");
 const loginBtn = $("#login");
+const loginSection = $("#login__section");
+const unfollowersSection = $("#unfollowers__section");
+const unfollowersEmpty = $("#unfollowers__empty");
+const unfollowersContainer = $(".unfollowers__container")[0];
 
 loginBtn.on("click", function () {
   const username = $("#username").val();
@@ -14,11 +19,43 @@ loginBtn.on("click", function () {
 window.api.onLoginResponse((event, args) => {
   if (args.success) {
     helper.notificationBuilder("Login Success", `Hello dear ${args.username}`);
+    loginSection.animate(
+      {
+        opacity: 0,
+      },
+      2000,
+      "linear",
+      () => {
+        loginSection.addClass("display__none");
+        loader.removeClass("display__none");
+        window.api.unfollowersListRequest();
+      }
+    );
   } else {
     helper.notificationBuilder("Login Failed", args.err);
   }
   loginBtn.attr("disabled", false);
   loginBtn.text("Login Now");
+});
+
+window.api.onUnfollowersListResponse((event, args) => {
+  if (args.success) {
+    loader.addClass("display__none");
+    if (args.unfollowers.length) {
+      unfollowersSection.removeClass("display__none");
+      const cartGenerator = helper.unfollowerCartBuilder(args.unfollowers);
+      const inter = setInterval(() => {
+        const next = cartGenerator.next();
+        if (next.done) {
+          clearInterval(inter);
+        }
+      }, 1500);
+    } else {
+      unfollowersEmpty.removeClass("display__none");
+    }
+  } else {
+    console.log(args.err);
+  }
 });
 
 const helper = (function () {
@@ -29,7 +66,48 @@ const helper = (function () {
     });
   }
 
+  function* unfollowerCartBuilder(items) {
+    const length = items.length;
+    let i = 0;
+
+    while (i < length) {
+      yield;
+      unfollowerImageToBase64(items[i], (imageBase64, item) => {
+        $(
+          `<div class="unfollower__cart""><img src="${imageBase64}" alt=""><div class="unfollower__cart__info"><p>${item.name}</p><button data-id="${item.id}">Unfollow</button></div></div>`
+        )
+          .animate({
+            width: "48%",
+          })
+          .appendTo(unfollowersContainer);
+        $(`[data-id="${item.id}"]`).on("click", (ev) => {
+          console.log(ev.target.attributes["0"].value);
+        });
+      });
+      ++i;
+    }
+  }
+
+  function unfollowerImageToBase64(item, callback) {
+    $.get(
+      {
+        url: item.image,
+        xhrFields: {
+          responseType: "blob",
+        },
+      },
+      (data) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          callback(reader.result, item);
+        };
+        reader.readAsDataURL(data);
+      }
+    );
+  }
+
   return {
     notificationBuilder,
+    unfollowerCartBuilder,
   };
 })();
