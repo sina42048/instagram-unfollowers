@@ -10,6 +10,19 @@
     font-family: Lobster, 'Lobster', sans-serif;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: black;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(to bottom left, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 body {
     width: 100%;
     height: 100vh;
@@ -20,6 +33,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.display__none {
+    display: none !important;
+    opacity: 0;
+}
+
+#loader {
+    position: fixed;
+    background-image: url("../images/1482.gif");
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, .8);
 }
 
 .overlay {
@@ -96,4 +126,79 @@ input[type=text]::placeholder, input[type=password]::placeholder {
     cursor: progress;
     color: white;
     font-size: 1.5rem;
+}
+
+.unfollowers__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 480px;
+    background-image: linear-gradient(to bottom right, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    opacity: .8;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+.unfollowers__container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    width: 480px;
+    background-image: linear-gradient(to bottom right, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    margin: 0 auto;
+    opacity: .8;
+    border-radius: 5px;
+    box-shadow: 5px 5px 40px;
+    overflow-y: scroll;
+    height: 350px;
+    transition: all .2s ease-in-out;
+}
+
+.unfollower__cart {
+    display: flex;
+    width: 48%;
+    margin-right: 2%;
+    margin-bottom: 2%;
+    justify-content: start;
+    align-items: center;
+    background-image: linear-gradient(to bottom right, #F58529, #FEDA77, #DD2A7B, #8134AF, #515BD4);
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px;
+    height: 30.3%;
+}
+
+.unfollower__cart img {
+    width: 30%;
+    height: 70%;
+    border-radius: 50%;
+}
+
+.unfollower__cart .unfollower__cart__info {
+    width: 70%;
+    padding: 10px;
+}
+
+.unfollower__cart .unfollower__cart__info p {
+    font-size: .8rem;
+    margin-bottom: 10px;
+}
+
+.unfollower__cart .unfollower__cart__info button {
+    border: none;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: .7rem;
+    display: block;
+    width: 100%;
+    transition: all .5s ease-in-out;
+}
+
+.unfollower__cart .unfollower__cart__info button:hover {
+    background-color: green;
 }
