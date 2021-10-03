@@ -29,7 +29,6 @@ function createWindow() {
       slashes: true,
     })
   );
-
   win.webContents.openDevTools();
 }
 
@@ -108,7 +107,7 @@ const instagram = (function () {
       const rawUnFollowers = followings.filter(
         (following) => !followersUserName.has(following.username)
       );
-      
+
       const unFollowers = rawUnFollowers.map((unfollower) => {
         return {
           id: unfollower.pk,
@@ -117,10 +116,8 @@ const instagram = (function () {
         };
       });
 
-      console.log(unFollowers);
       onSuccess(unFollowers);
     } catch (err) {
-      console.log(err);
       onFailure(err);
     }
   }

@@ -33,9 +33,9 @@ window.api.onLoginResponse((event, args) => {
     );
   } else {
     helper.notificationBuilder("Login Failed", args.err);
+    loginBtn.attr("disabled", false);
+    loginBtn.text("Login Now");
   }
-  loginBtn.attr("disabled", false);
-  loginBtn.text("Login Now");
 });
 
 window.api.onUnfollowersListResponse((event, args) => {
@@ -54,7 +54,14 @@ window.api.onUnfollowersListResponse((event, args) => {
       unfollowersEmpty.removeClass("display__none");
     }
   } else {
-    console.log(args.err);
+    loader.addClass("display__none");
+    loginSection.removeClass("display__none");
+    loginBtn.attr("disabled", false);
+    loginBtn.text("Login Now");
+    helper.notificationBuilder(
+      "Instagram Error",
+      "something went wrong, Please login again after few minutes."
+    );
   }
 });
 
