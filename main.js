@@ -38,7 +38,7 @@ app.whenReady().then(() => {
   createWindow();
 
   ipcMain.on("login_request", async (event, args) => {
-    console.log(args);
+
     const userData = {
       username: args.username,
       password: args.password,
