@@ -12,13 +12,10 @@ loginBtn.on("click", function () {
 });
 
 window.api.onLoginResponse((event, args) => {
-  if (args[0].success) {
-    helper.notificationBuilder(
-      "Login Success",
-      `Hello dear ${args[0].username}`
-    );
+  if (args.success) {
+    helper.notificationBuilder("Login Success", `Hello dear ${args.username}`);
   } else {
-    helper.notificationBuilder("Login Failed", args[0].err);
+    helper.notificationBuilder("Login Failed", args.err);
   }
   loginBtn.attr("disabled", false);
   loginBtn.text("Login Now");

@@ -38,17 +38,18 @@ app.whenReady().then(() => {
   createWindow();
 
   ipcMain.on("login_request", async (event, args) => {
+    console.log(args);
     const userData = {
-      username: args[0].username,
-      password: args[0].password,
+      username: args.username,
+      password: args.password,
     };
     await instagram.loginRequest(
       userData,
       (user) => {
-        event.sender.send("login_response", [{ success: true, ...user }]);
+        event.sender.send("login_response", { success: true, ...user });
       },
       (err) => {
-        event.sender.send("login_response", [{ success: false, err }]);
+        event.sender.send("login_response", { success: false, err });
       }
     );
   });
