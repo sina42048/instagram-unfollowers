@@ -7,4 +7,10 @@ contextBridge.exposeInMainWorld("api", {
   onLoginResponse: (handler) => {
     ipcRenderer.on("login_response", handler);
   },
+  unfollowersListRequest: () => {
+    ipcRenderer.send("unfollowers_list_request");
+  },
+  onUnfollowersListResponse: (handler) => {
+    ipcRenderer.on("unfollowers_list_response", handler);
+  },
 });
