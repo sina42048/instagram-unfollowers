@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const { IgApiClient } = require("instagram-private-api");
 const url = require("url");
 const path = require("path");
@@ -14,7 +14,7 @@ function createWindow() {
     width: 640,
     height: 480,
     resizable: false,
-    //frame: false,
+    frame: false, // change in dev
     icon: path.join(__dirname, path.sep, "images", "instagram.png"),
     webPreferences: {
       preload: path.join(__dirname, path.sep, "scripts", "preload.js"),
@@ -29,7 +29,7 @@ function createWindow() {
       slashes: true,
     })
   );
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools(); // change in dev
 }
 
 app.setAppUserModelId("Instagram Unfollowers");
@@ -37,12 +37,12 @@ app.setAppUserModelId("Instagram Unfollowers");
 app.whenReady().then(() => {
   createWindow();
 
-  ipcMain.on("login_request", async (event, args) => {
+  ipcMain.on("login_request", (event, args) => {
     const userData = {
       username: args.username,
       password: args.password,
     };
-    await instagram.loginRequest(
+    instagram.loginRequest(
       userData,
       (user) => {
         event.sender.send("login_response", { success: true, ...user });
@@ -53,7 +53,7 @@ app.whenReady().then(() => {
     );
   });
 
-  ipcMain.on("unfollowers_list_request", async (event, args) => {
+  ipcMain.on("unfollowers_list_request", (event, args) => {
     instagram.unfollowersListRequest(
       (unfollowers) => {
         event.sender.send("unfollowers_list_response", {
@@ -65,6 +65,25 @@ app.whenReady().then(() => {
         event.sender.send("unfollowers_list_response", { success: false, err });
       }
     );
+  });
+
+  ipcMain.on("unfollower_remove_request", (event, args) => {
+    instagram.removeUnfollower(
+      args.id,
+      () => {
+        event.sender.send("unfollower_remove_response", {
+          success: true,
+          id: args.id,
+        });
+      },
+      (err) => {
+        event.sender.send("unfollower_remove_response", { sucess: false, err });
+      }
+    );
+  });
+
+  ipcMain.on("close_window", (event, args) => {
+    app.quit();
   });
 
   app.on("activate", () => {
@@ -87,7 +106,11 @@ const instagram = (function () {
     ig.state.generateDevice((Math.random() * 100000).toString());
     try {
       const userData = await ig.account.login(username, password);
-      onSuccess(userData);
+      onSuccess({
+        id: userData.pk,
+        image: userData.profile_pic_url,
+        name: userData.username,
+      });
     } catch (err) {
       onFailure(err);
     }
@@ -122,6 +145,15 @@ const instagram = (function () {
     }
   }
 
+  async function removeUnfollower(id, onSuccess, onFailure) {
+    try {
+      await ig.friendship.destroy(id);
+      onSuccess();
+    } catch (err) {
+      onFailure(err);
+    }
+  }
+
   async function getAllItemsFromFeed(feed) {
     let items = [];
 
@@ -134,5 +166,6 @@ const instagram = (function () {
   return {
     loginRequest,
     unfollowersListRequest,
+    removeUnfollower,
   };
 })();
