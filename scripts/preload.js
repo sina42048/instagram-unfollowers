@@ -13,4 +13,13 @@ contextBridge.exposeInMainWorld("api", {
   onUnfollowersListResponse: (handler) => {
     ipcRenderer.on("unfollowers_list_response", handler);
   },
+  unfollowerRmoveRequest: (id) => {
+    ipcRenderer.send("unfollower_remove_request", { id });
+  },
+  onUnfollowerRemoveResponse: (handler) => {
+    ipcRenderer.on("unfollower_remove_response", handler);
+  },
+  closeWindowRequest: () => {
+    ipcRenderer.send("close_window");
+  }
 });
