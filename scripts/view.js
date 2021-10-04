@@ -1,3 +1,4 @@
+const insternetStatus = $("#internet__status");
 const loader = $("#loader");
 const loginBtn = $("#login");
 const loginSection = $("#login__section");
@@ -7,6 +8,19 @@ const unfollowersContainer = $(".unfollowers__container")[0];
 const userProfileName = $(".profile__name")[0];
 const userProfileImage = $(".profile__image")[0];
 const closeWindow = $("#close__window");
+
+$(window).on("online", () => {
+  helper.notificationBuilder("Online", "you are online now.");
+  insternetStatus.addClass("display__none");
+});
+
+$(window).on("offline", () => {
+  helper.notificationBuilder(
+    "Offline",
+    "you are offline, please connect to internet."
+  );
+  insternetStatus.removeClass("display__none");
+});
 
 loginBtn.on("click", function () {
   const username = $("#username").val();

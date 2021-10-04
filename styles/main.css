@@ -36,6 +36,19 @@ body {
     overflow: hidden;
 }
 
+#internet__status {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/loader.svg");
+    background-color: black;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+}
+
 .display__none {
     display: none !important;
     opacity: 0;
