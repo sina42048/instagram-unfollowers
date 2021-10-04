@@ -4,6 +4,9 @@ const loginSection = $("#login__section");
 const unfollowersSection = $("#unfollowers__section");
 const unfollowersEmpty = $("#unfollowers__empty");
 const unfollowersContainer = $(".unfollowers__container")[0];
+const userProfileName = $(".profile__name")[0];
+const userProfileImage = $(".profile__image")[0];
+const closeWindow = $("#close__window");
 
 loginBtn.on("click", function () {
   const username = $("#username").val();
@@ -16,9 +19,13 @@ loginBtn.on("click", function () {
   }
 });
 
+closeWindow.on("click", () => {
+  window.api.closeWindowRequest();
+});
+
 window.api.onLoginResponse((event, args) => {
   if (args.success) {
-    helper.notificationBuilder("Login Success", `Hello dear ${args.username}`);
+    helper.notificationBuilder("Login Success", `Hello dear ${args.name}`);
     loginSection.animate(
       {
         opacity: 0,
@@ -31,6 +38,10 @@ window.api.onLoginResponse((event, args) => {
         window.api.unfollowersListRequest();
       }
     );
+    helper.imageTobase64(args, (image, user) => {
+      userProfileImage.setAttribute("src", image);
+      userProfileName.textContent = "Hello " + args.name;
+    });
   } else {
     helper.notificationBuilder("Login Failed", args.err);
     loginBtn.attr("disabled", false);
@@ -65,6 +76,23 @@ window.api.onUnfollowersListResponse((event, args) => {
   }
 });
 
+window.api.onUnfollowerRemoveResponse((event, args) => {
+  if (args.success) {
+    $(`[data-id="${args.id}"]`)
+      .text("Unfollowed")
+      .css("background-color", "green")
+      .css("color", "white")
+      .css("cursor", "not-allowed");
+    helper.notificationBuilder("Success", "you successfully unfollowed user.");
+  } else {
+    helper.notificationBuilder(
+      "Failed",
+      "something went wrong while unfollowing user, try again."
+    );
+    $(`[data-id="${args.id}"]`).attr("disabled", "false");
+  }
+});
+
 const helper = (function () {
   function notificationBuilder(title, body) {
     return new Notification(title, {
@@ -79,7 +107,7 @@ const helper = (function () {
 
     while (i < length) {
       yield;
-      unfollowerImageToBase64(items[i], (imageBase64, item) => {
+      imageTobase64(items[i], (imageBase64, item) => {
         $(
           `<div class="unfollower__cart""><img src="${imageBase64}" alt=""><div class="unfollower__cart__info"><p>${item.name}</p><button data-id="${item.id}">Unfollow</button></div></div>`
         )
@@ -88,14 +116,16 @@ const helper = (function () {
           })
           .appendTo(unfollowersContainer);
         $(`[data-id="${item.id}"]`).on("click", (ev) => {
-          console.log(ev.target.attributes["0"].value);
+          window.api.unfollowerRmoveRequest(ev.target.attributes["0"].value);
+          $(ev.target).attr("disabled", true);
+          $(ev.target).css("cursor", "progress");
         });
       });
       ++i;
     }
   }
 
-  function unfollowerImageToBase64(item, callback) {
+  function imageTobase64(item, callback) {
     $.get(
       {
         url: item.image,
@@ -116,5 +146,6 @@ const helper = (function () {
   return {
     notificationBuilder,
     unfollowerCartBuilder,
+    imageTobase64,
   };
 })();
