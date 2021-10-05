@@ -12,13 +12,13 @@ function createWindow() {
     hasShadow: true,
     title: "Instagram Unfollowers",
     width: 640,
+    show: false,
     height: 480,
     resizable: false,
     frame: false, // change in dev
     icon: path.join(__dirname, path.sep, "images", "instagram.png"),
     webPreferences: {
       preload: path.join(__dirname, path.sep, "scripts", "preload.js"),
-      webSecurity: false,
     },
   });
 
@@ -29,6 +29,10 @@ function createWindow() {
       slashes: true,
     })
   );
+
+  win.once("ready-to-show", () => {
+    win.show();
+  });
   //win.webContents.openDevTools(); // change in dev
 }
 
